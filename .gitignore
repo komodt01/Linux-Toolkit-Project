@@ -1,0 +1,6 @@
+*.log
+*.swp
+*.bak
+*.tmp
+healthlog.txt
+.history
