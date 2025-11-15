@@ -38,3 +38,15 @@ The approach supports compliance with **NIST 800-53**, **CIS Benchmarks**, **PCI
 2. Make scripts executable:  
    ```bash
    chmod +x setup.sh healthcheck.sh
+3. Run the setup
+   sudo ./setup.sh
+4. Schedule the hourly health check:
+   (crontab -l 2>/dev/null; echo "0 * * * * /home/ubuntu/linux-toolkit/healthcheck.sh >> /home/ubuntu/healthlog.txt 2>&1") | crontab -
+
+Output
+The toolkit generates an hourly log (healthlog.txt) containing:
+CPU and memory usage
+Disk capacity
+Top processes
+Login attempts and recent auth events
+
