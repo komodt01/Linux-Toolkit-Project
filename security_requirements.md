@@ -1,6 +1,5 @@
 # Security Requirements  
 _Project:_ **Linux Security Toolkit**  
-_Generated:_ 2025-11-13  
 _Cloud:_ AWS (EC2 Linux-based systems)
 
 ## 1. Security Objectives
