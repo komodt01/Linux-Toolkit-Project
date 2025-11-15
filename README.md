@@ -1,43 +1,40 @@
 # 🛡️ Linux Security & Automation Toolkit
 
 ## 📌 Project Overview
-This project automates the initial hardening of a Linux-based system using Bash scripts. It creates a secure baseline for Linux virtual machines in AWS, on-premises, or hybrid environments.
+This project provides an automated Linux hardening and monitoring toolkit designed for EC2 instances, on-premises virtual machines, and hybrid environments. It establishes a secure baseline using Bash automation to enforce consistent, repeatable host-level controls aligned with enterprise and compliance standards.
 
 ## 💼 Business Value
-This toolkit reduces misconfiguration risk by automating core hardening tasks: disabling root SSH login, installing fail2ban, enabling automatic updates, enforcing firewall rules, and monitoring system health. It's aligned with compliance best practices (NIST 800-53, PCI-DSS, CIS Benchmarks) and can be adapted to provisioning workflows or CI/CD pipelines.
+Misconfigured Linux hosts are a common source of security incidents. This toolkit reduces operational and security risk by automating core protections:
+- SSH hardening (disabling root login)
+- Host-based firewall enforcement
+- Intrusion detection with fail2ban
+- Automated security updates
+- Ongoing system health monitoring
+
+The approach supports compliance with **NIST 800-53**, **CIS Benchmarks**, **PCI-DSS**, and internal cloud governance frameworks.
 
 ## 🧰 Features
-- Creates a non-root sudo user
-- Configures UFW firewall
-- Enables automatic security updates
-- Installs `fail2ban` to detect brute-force attempts
-- Logs system performance hourly via `cron`
+- Creates a non-root administrative user with sudo privileges
+- Configures UFW with a default-deny policy
+- Enables unattended security updates
+- Installs and configures fail2ban for SSH brute-force protection
+- Generates hourly performance and security logs via cron
 
 ## 🧠 Linux Command Reference Guide
-
-| Command or Script Line                            | What It Does                                                                 |
-|--------------------------------------------------|------------------------------------------------------------------------------|
-| adduser                                           | Creates a new user on the system                                            |
-| usermod -aG sudo                                  | Adds the new user to the 'sudo' group for admin rights                      |
-| sed -i ...                                        | Edits the SSH config file to disable remote root login                      |
-| systemctl restart ssh                            | Restarts the SSH service to apply the new config                            |
-| apt update && apt install -y ...                 | Updates the system and installs packages like ufw and fail2ban              |
-| ufw allow ssh/http/https                         | Configures the firewall to allow required ports                             |
-| ufw --force enable                                | Enables the firewall without confirmation                                   |
-| dpkg-reconfigure unattended-upgrades             | Enables automatic security updates                                          |
-| crontab                                           | Schedules recurring tasks                                                   |
+| Command or Script Line | What It Does |
+|------------------------|--------------|
+| `adduser` | Creates a new user on the system |
+| `usermod -aG sudo` | Grants administrative privileges |
+| `sed -i ...` | Hardens SSH configuration (e.g., root login disabled) |
+| `systemctl restart ssh` | Applies updated SSH settings |
+| `apt update && apt install -y ...` | Updates the system and installs required packages |
+| `ufw allow ssh/http/https` | Defines allowed network traffic |
+| `ufw --force enable` | Enables host-based firewall |
+| `dpkg-reconfigure unattended-upgrades` | Enables automatic security patching |
+| `crontab` | Schedules recurring automation tasks |
 
 ## 📝 How to Use
-1. Upload `setup.sh` and `healthcheck.sh` to your Linux VM
-2. Run `chmod +x setup.sh && sudo ./setup.sh`
-3. Run `chmod +x healthcheck.sh`
-4. Add to cron:  
-```bash
-(crontab -l 2>/dev/null; echo "0 * * * * /home/ubuntu/linux-toolkit/healthcheck.sh >> /home/ubuntu/healthlog.txt 2>&1") | crontab -
-```
-
-## 📈 Output
-Hourly system health logs are saved to `healthlog.txt` and include CPU load, memory usage, disk space, and top processes.
-
-## 📜 License
-MIT License
+1. Upload `setup.sh` and `healthcheck.sh` to your VM.
+2. Make scripts executable:  
+   ```bash
+   chmod +x setup.sh healthcheck.sh
