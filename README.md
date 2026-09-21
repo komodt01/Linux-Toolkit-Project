@@ -1,52 +1,79 @@
-# 🛡️ Linux Security & Automation Toolkit
+# Linux Security Hardening Lab
 
-## 📌 Project Overview
-This project provides an automated Linux hardening and monitoring toolkit designed for EC2 instances, on-premises virtual machines, and hybrid environments. It establishes a secure baseline using Bash automation to enforce consistent, repeatable host-level controls aligned with enterprise and compliance standards.
+## Overview
 
-## 💼 Business Value
-Misconfigured Linux hosts are a common source of security incidents. This toolkit reduces operational and security risk by automating core protections:
-- SSH hardening (disabling root login)
-- Host-based firewall enforcement
-- Intrusion detection with fail2ban
-- Automated security updates
-- Ongoing system health monitoring
+This hands-on lab explores foundational Linux host security using an Ubuntu EC2 instance and Bash automation.
 
-The approach supports compliance with **NIST 800-53**, **CIS Benchmarks**, **PCI-DSS**, and internal cloud governance frameworks.
+The objective was to practice applying repeatable host-level security controls rather than relying entirely on manual configuration. The lab focuses on administrative access, host firewall rules, security updates, basic protective tooling, and system health visibility.
 
-## 🧰 Features
-- Creates a non-root administrative user with sudo privileges
-- Configures UFW with a default-deny policy
-- Enables unattended security updates
-- Installs and configures fail2ban for SSH brute-force protection
-- Generates hourly performance and security logs via cron
+## Security Objectives
 
-## 🧠 Linux Command Reference Guide
-| Command or Script Line | What It Does |
-|------------------------|--------------|
-| `adduser` | Creates a new user on the system |
-| `usermod -aG sudo` | Grants administrative privileges |
-| `sed -i ...` | Hardens SSH configuration (e.g., root login disabled) |
-| `systemctl restart ssh` | Applies updated SSH settings |
-| `apt update && apt install -y ...` | Updates the system and installs required packages |
-| `ufw allow ssh/http/https` | Defines allowed network traffic |
-| `ufw --force enable` | Enables host-based firewall |
-| `dpkg-reconfigure unattended-upgrades` | Enables automatic security patching |
-| `crontab` | Schedules recurring automation tasks |
+The lab focuses on several fundamental Linux security concerns:
 
-## 📝 How to Use
-1. Upload `setup.sh` and `healthcheck.sh` to your VM.
-2. Make scripts executable:  
-   ```bash
-   chmod +x setup.sh healthcheck.sh
-3. Run the setup
-   sudo ./setup.sh
-4. Schedule the hourly health check:
-   (crontab -l 2>/dev/null; echo "0 * * * * /home/ubuntu/linux-toolkit/healthcheck.sh >> /home/ubuntu/healthlog.txt 2>&1") | crontab -
+- Reduce reliance on privileged root access
+- Restrict unnecessary inbound network traffic
+- Maintain current security updates
+- Install protection against repeated authentication attempts
+- Automate basic system health collection
+- Make host-security configuration more repeatable
 
-Output
-The toolkit generates an hourly log (healthlog.txt) containing:
-CPU and memory usage
-Disk capacity
-Top processes
-Login attempts and recent auth events
+## Implemented Controls
 
+### Administrative Access
+
+The setup script:
+
+- Creates a non-root administrative user
+- Adds the user to the `sudo` group
+- Disables remote root login through the SSH configuration
+
+This reduces direct use of the root account for remote administration.
+
+### Host Firewall
+
+UFW is configured with:
+
+- Default deny for inbound traffic
+- Default allow for outbound traffic
+- SSH permitted
+- HTTP permitted
+- HTTPS permitted
+
+The firewall configuration demonstrates host-level network restriction while allowing the services used by the lab.
+
+### Security Updates
+
+The lab installs and enables Ubuntu's `unattended-upgrades` capability to support automated security patching.
+
+### Fail2ban
+
+Fail2ban is installed as part of the setup process.
+
+The current implementation installs the package but does not define custom jail policies. Production use would require validating and configuring Fail2ban policies for the specific workload and authentication requirements.
+
+### System Health Collection
+
+`healthcheck.sh` collects:
+
+- System uptime and CPU load
+- Disk utilization
+- Memory utilization
+- Highest memory-consuming processes
+
+The script can be scheduled through cron to provide recurring local system-health information.
+
+This is basic operational visibility rather than centralized security monitoring or SIEM integration.
+
+## Repository Structure
+
+```text
+Linux-Toolkit-Project/
+├── README.md
+├── setup.sh
+├── healthcheck.sh
+├── ufw-rules.sh
+├── security_requirements.md
+├── risks_mitigations.md
+├── project_summary.md
+├── .gitignore
+└── LICENSE
