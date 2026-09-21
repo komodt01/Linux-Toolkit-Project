@@ -1,21 +1,38 @@
 #!/bin/bash
 
-echo "=== System Health Report - $(date) ==="
-echo ""
+# Linux Security Hardening Lab
+# Basic host health and security-status collection.
 
-echo "[CPU Load]"
+echo "=== Linux Host Health Report ==="
+echo "Generated: $(date)"
+echo
+
+echo "=== System Uptime and Load ==="
 uptime
+echo
 
-echo ""
-echo "[Disk Usage]"
+echo "=== Disk Usage ==="
 df -h
+echo
 
-echo ""
-echo "[Memory Usage]"
+echo "=== Memory Usage ==="
 free -m
+echo
 
-echo ""
-echo "[Top 3 Memory-Consuming Processes]"
-ps aux --sort=-%mem | head -n 4
+echo "=== Top Memory-Consuming Processes ==="
+ps aux --sort=-%mem | head -n 6
+echo
 
-echo "-----------------------------------------"
+echo "=== Firewall Status ==="
+ufw status
+echo
+
+echo "=== Fail2ban Service Status ==="
+systemctl is-active fail2ban || true
+echo
+
+echo "=== Unattended Upgrades Status ==="
+systemctl is-enabled unattended-upgrades 2>/dev/null || true
+echo
+
+echo "=== Report Complete ==="
